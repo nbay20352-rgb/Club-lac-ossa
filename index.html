@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Lac Ossa — Écolodge, Restaurant & Détente à Dizangué</title>
+    <meta name="description" content="Découvrez l'hôtel Club Lac Ossa au bord du lac Ossa à Dizangué, Cameroun. Bungalows vue lac, excursions en pirogue, livraison à domicile et paiement Mobile Money.">
+    
+    <!-- Polices Google Fonts : Playfair Display pour l'élégance et Inter pour la lisibilité -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        forest: {
+                            DEFAULT: '#1B4332',
+                            light: '#2D6A4F',
+                            dark: '#081C15'
+                        },
+                        sand: {
+                            DEFAULT: '#F8F5F0',
+                            dark: '#EFEAE1'
+                        },
+                        terracotta: {
+                            DEFAULT: '#D4A373',
+                            hover: '#C28E5C'
+                        },
+                        lake: {
+                            DEFAULT: '#0077B6',
+                            light: '#90E0EF'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Icônes Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Bibliothèque QRCode.js pour générer le QR Code vers le menu du restaurant -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        /* Animation douce au défilement */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Effet parallaxe léger sur l'image d'accueil */
+        .hero-bg {
+            background-image: linear-gradient(to bottom, rgba(8, 28, 21, 0.55), rgba(8, 28, 21, 0.75)), 
+                              url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1920&q=85');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-sand text-stone-800 font-sans antialiased selection:bg-terracotta selection:text-white overflow-x-hidden">
+
+    <!-- ==================== 1. BARRE DE NAVIGATION ==================== -->
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-4 sm:px-8 text-white">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#accueil" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-terracotta flex items-center justify-center text-forest-dark shadow-md group-hover:scale-105 transition-transform">
+                    <i data-lucide="waves" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <span class="font-serif text-xl sm:text-2xl font-bold tracking-wide block leading-none">Club Lac Ossa</span>
+                    <span class="text-[11px] uppercase tracking-[0.2em] text-terracotta font-medium">Dizangué • Cameroun</span>
+                </div>
+            </a>
+
+            <!-- Liens Desktop -->
+            <nav class="hidden lg:flex items-center gap-8 text-sm font-medium">
+                <a href="#accueil" class="hover:text-terracotta transition-colors">Accueil</a>
+                <a href="#esprit" class="hover:text-terracotta transition-colors">L'Esprit du Lieu</a>
+                <a href="#hebergement" class="hover:text-terracotta transition-colors">Chambres</a>
+                <a href="#restauration" class="hover:text-terracotta transition-colors">Restaurant & Livraison</a>
+                <a href="#activites" class="hover:text-terracotta transition-colors">Excursions</a>
+                <a href="#reservation" class="hover:text-terracotta transition-colors">Réserver</a>
+            </nav>
+
+            <!-- Actions Droite : Panier Rapide + Sélecteur de Devise + CTA Réserver -->
+            <div class="hidden sm:flex items-center gap-3">
+                <!-- Bouton Panier Rapide -->
+                <a href="#panier-livraison" class="relative p-2.5 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/20 text-white transition-all" aria-label="Voir le panier de livraison">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                    <span id="nav-cart-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full bg-terracotta text-forest-dark text-[11px] font-bold flex items-center justify-center shadow">0</span>
+                </a>
+
+                <!-- Bouton QR Code Menu Restaurant -->
+                <button type="button" onclick="openMenuQrModal()" title="QR Code Menu Restaurant" aria-label="Afficher le QR Code du menu du restaurant" class="p-2.5 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/20 text-white transition-all cursor-pointer flex items-center gap-1.5">
+                    <i data-lucide="qr-code" class="w-4 h-4 text-terracotta"></i>
+                    <span class="hidden xl:inline text-xs font-semibold">QR Menu</span>
+                </button>
+
+                <!-- Sélecteur de devise dynamique -->
+                <div class="flex items-center bg-white/15 backdrop-blur-md rounded-full p-1 border border-white/20" id="currency-switcher">
+                    <button type="button" onclick="setCurrency('XAF')" id="btn-xaf" class="px-3 py-1 rounded-full text-xs font-semibold bg-terracotta text-forest-dark transition-all">
+                        FCFA
+                    </button>
+                    <button type="button" onclick="setCurrency('EUR')" id="btn-eur" class="px-3 py-1 rounded-full text-xs font-semibold text-white hover:text-terracotta transition-all">
+                        EUR (€)
+                    </button>
+                </div>
+
+                <a href="#reservation" class="bg-terracotta hover:bg-terracotta-hover text-forest-dark font-semibold text-sm px-5 py-2.5 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+                    Réserver
+                </a>
+            </div>
+
+            <!-- Bouton Menu Mobile -->
+            <button id="mobile-menu-btn" type="button" aria-label="Ouvrir le menu" class="lg:hidden p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Menu Mobile Déroulant -->
+        <div id="mobile-menu" class="hidden lg:hidden mt-4 mx-auto max-w-7xl bg-forest-dark/95 backdrop-blur-lg rounded-2xl p-6 border border-white/10 shadow-2xl">
+            <div class="flex flex-col space-y-4 text-base font-medium">
+                <a href="#accueil" class="mobile-link py-2 border-b border-white/10 hover:text-terracotta">Accueil</a>
+                <a href="#esprit" class="mobile-link py-2 border-b border-white/10 hover:text-terracotta">L'Esprit du Lieu</a>
+                <a href="#hebergement" class="mobile-link py-2 border-b border-white/10 hover:text-terracotta">Chambres & Bungalows</a>
+                <a href="#restauration" class="mobile-link py-2 border-b border-white/10 hover:text-terracotta">Restaurant & Livraison</a>
+                <a href="#activites" class="mobile-link py-2 border-b border-white/10 hover:text-terracotta">Excursions & Activités</a>
+                <a href="#reservation" class="mobile-link py-2 hover:text-terracotta">Réserver & Contact</a>
+                
+                <!-- Sélecteur devise sur mobile -->
+                <div class="flex items-center justify-between pt-2">
+                    <span class="text-sm text-stone-300">Devise d'affichage :</span>
+                    <div class="flex items-center bg-white/10 rounded-full p-1">
+                        <button type="button" onclick="setCurrency('XAF')" id="btn-xaf-mobile" class="px-3 py-1 rounded-full text-xs font-semibold bg-terracotta text-forest-dark">FCFA</button>
+                        <button type="button" onclick="setCurrency('EUR')" id="btn-eur-mobile" class="px-3 py-1 rounded-full text-xs font-semibold text-white">EUR (€)</button>
+                    </div>
+                </div>
+
+                <!-- Bouton QR Menu Mobile -->
+                <button type="button" onclick="openMenuQrModal()" class="w-full py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-terracotta text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer">
+                    <i data-lucide="qr-code" class="w-4 h-4"></i>
+                    <span>QR Code Menu Restaurant</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== 2. SECTION HÉRO (ACCUEIL) ==================== -->
+    <section id="accueil" class="hero-bg relative min-h-screen flex flex-col justify-center items-center text-center text-white px-4 pt-28 pb-16">
+        <div class="max-w-4xl mx-auto space-y-6">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs sm:text-sm font-medium tracking-wide text-terracotta">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span>Sanctuaire naturel au bord de la réserve du Lac Ossa</span>
+            </div>
+
+            <h1 class="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold leading-tight tracking-tight">
+                Évadez-vous au rythme des eaux du <span class="italic text-terracotta">Lac Ossa</span>
+            </h1>
+
+            <p class="text-base sm:text-xl text-stone-200 max-w-2xl mx-auto font-light leading-relaxed">
+                À seulement 1h30 de Douala, profitez d'un refuge paisible entre forêt tropicale et lagune. Bungalows panoramiques, gastronomie du terroir, livraison à domicile et observation des lamantins.
+            </p>
+
+            <!-- Barre de pré-réservation rapide -->
+            <form id="quick-search-form" class="mt-8 bg-white/95 backdrop-blur-md text-stone-800 p-3 sm:p-4 rounded-3xl shadow-2xl max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-4 gap-3 text-left">
+                <div class="p-2 sm:border-r border-stone-200">
+                    <label for="hero-checkin" class="block text-[11px] font-bold uppercase tracking-wider text-forest mb-1">Arrivée</label>
+                    <input type="date" id="hero-checkin" class="w-full text-sm font-medium bg-transparent focus:outline-none text-stone-700">
+                </div>
+                <div class="p-2 sm:border-r border-stone-200">
+                    <label for="hero-checkout" class="block text-[11px] font-bold uppercase tracking-wider text-forest mb-1">Départ</label>
+                    <input type="date" id="hero-checkout" class="w-full text-sm font-medium bg-transparent focus:outline-none text-stone-700">
+                </div>
+                <div class="p-2">
+                    <label for="hero-guests" class="block text-[11px] font-bold uppercase tracking-wider text-forest mb-1">Voyageurs</label>
+                    <select id="hero-guests" class="w-full text-sm font-medium bg-transparent focus:outline-none text-stone-700">
+                        <option value="1">1 Adulte</option>
+                        <option value="2" selected>2 Adultes</option>
+                        <option value="3">2 Adultes, 1 Enfant</option>
+                        <option value="4">Famille (4 pers.)</option>
+                    </select>
+                </div>
+                <button type="submit" class="bg-forest hover:bg-forest-light text-white font-semibold rounded-2xl py-3.5 px-4 flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer">
+                    <span>Voir les tarifs</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Indicateur de défilement -->
+        <a href="#esprit" aria-label="Découvrir l'hôtel" class="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce text-white/70 hover:text-white">
+            <i data-lucide="chevron-down" class="w-7 h-7"></i>
+        </a>
+    </section>
+
+    <!-- ==================== 3. L'ESPRIT DU LIEU & ATOUTS ==================== -->
+    <section id="esprit" class="py-20 sm:py-28 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <!-- Colonne Visuelle -->
+            <div class="lg:col-span-6 relative reveal">
+                <div class="rounded-3xl overflow-hidden shadow-2xl aspect-[4/3]">
+                    <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1000&q=80" 
+                         onerror="this.src='https://placehold.co/800x600/1B4332/F8F5F0?text=Terrasse+Club+Lac+Ossa'" 
+                         alt="Vue panoramique depuis la terrasse du Club Lac Ossa" 
+                         class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                </div>
+                <!-- Carte flottante d'expérience -->
+                <div class="hidden sm:flex items-center gap-4 bg-white p-5 rounded-2xl shadow-xl border border-stone-100 absolute -bottom-6 -right-6 max-w-xs">
+                    <div class="w-12 h-12 rounded-xl bg-forest/10 text-forest flex items-center justify-center shrink-0">
+                        <i data-lucide="compass" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="font-serif font-bold text-forest text-base">Écotourisme & Sérénité</p>
+                        <p class="text-xs text-stone-500 mt-0.5">Accès privé aux berges du lac et départ direct en pirogue.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne Texte -->
+            <div class="lg:col-span-6 space-y-6 reveal">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-lake">Bienvenue à Dizangué</span>
+                <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-forest leading-tight">
+                    Une parenthèse enchantée entre lac et nature préservée
+                </h2>
+                <p class="text-stone-600 leading-relaxed text-base sm:text-lg">
+                    Niché sur les rives verdoyantes du plus grand lac naturel du littoral camerounais, le <strong>Club Lac Ossa</strong> vous accueille dans une atmosphère chaleureuse et authentique. Que vous veniez pour un week-end romantique, une retraite en famille ou un séminaire au vert, chaque instant invite au lâcher-prise.
+                </p>
+
+                <!-- Grille des 4 points forts -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                    <div class="flex items-start gap-3 p-4 rounded-2xl bg-white shadow-sm border border-stone-100">
+                        <i data-lucide="wifi" class="w-5 h-5 text-terracotta shrink-0 mt-0.5"></i>
+                        <div>
+                            <h3 class="font-semibold text-sm text-forest">Wi-Fi Haut Débit & Groupe</h3>
+                            <p class="text-xs text-stone-500 mt-1">Connexion fiable et alimentation électrique continue 24h/24.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 rounded-2xl bg-white shadow-sm border border-stone-100">
+                        <i data-lucide="utensils" class="w-5 h-5 text-terracotta shrink-0 mt-0.5"></i>
+                        <div>
+                            <h3 class="font-semibold text-sm text-forest">Restaurant & Livraison</h3>
+                            <p class="text-xs text-stone-500 mt-1">Poissons frais du lac sur place ou livrés à Dizangué et Édéa.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 rounded-2xl bg-white shadow-sm border border-stone-100">
+                        <i data-lucide="ship" class="w-5 h-5 text-terracotta shrink-0 mt-0.5"></i>
+                        <div>
+                            <h3 class="font-semibold text-sm text-forest">Balades & Lamantins</h3>
+                            <p class="text-xs text-stone-500 mt-1">Excursions guidées sur les îlots et observation de la faune.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 rounded-2xl bg-white shadow-sm border border-stone-100">
+                        <i data-lucide="shield-check" class="w-5 h-5 text-terracotta shrink-0 mt-0.5"></i>
+                        <div>
+                            <h3 class="font-semibold text-sm text-forest">Parking Sécurisé</h3>
+                            <p class="text-xs text-stone-500 mt-1">Domaine clos et gardé à 15 minutes de l'axe lourd Édéa-Kribi.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 4. HÉBERGEMENT (CHAMBRES & BUNGALOWS) ==================== -->
+    <section id="hebergement" class="py-20 sm:py-28 bg-sand-dark px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- En-tête de section -->
+            <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-lake block mb-3">Nos Hébergements</span>
+                <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-forest mb-4">
+                    Chambres & Bungalows au bord de l'eau
+                </h2>
+                <p class="text-stone-600 text-base sm:text-lg">
+                    Tous nos hébergements incluent le petit-déjeuner continental ou camerounais face au lac, la climatisation et l'accès libre aux jardins.
+                </p>
+            </div>
+
+            <!-- Cartes des 3 catégories -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Carte 1 : Chambre Standard Jardin -->
+                <article class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col reveal group">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80" 
+                             onerror="this.src='https://placehold.co/600x400/2D6A4F/F8F5F0?text=Chambre+Standard+Jardin'" 
+                             alt="Chambre Standard Jardin" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-4 left-4 bg-forest/90 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                            Vue Jardin Tropical
+                        </span>
+                    </div>
+                    <div class="p-6 sm:p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start gap-2 mb-3">
+                            <h3 class="font-serif text-2xl font-bold text-forest">Chambre Standard</h3>
+                            <div class="text-right">
+                                <span class="block text-lg font-bold text-forest price-tag" data-xaf="35000">35 000 FCFA</span>
+                                <span class="text-xs text-stone-400">/ nuit</span>
+                            </div>
+                        </div>
+                        <p class="text-stone-600 text-sm leading-relaxed mb-6">
+                            Confortable et lumineuse, idéale pour les voyageurs en solo ou en couple souhaitant profiter du calme des jardins arborés.
+                        </p>
+                        <ul class="space-y-2 text-xs text-stone-600 mb-8 border-t border-stone-100 pt-4">
+                            <li class="flex items-center gap-2"><i data-lucide="bed-double" class="w-4 h-4 text-terracotta"></i> Lit Queen Size (2 personnes)</li>
+                            <li class="flex items-center gap-2"><i data-lucide="wind" class="w-4 h-4 text-terracotta"></i> Climatisation & Moustiquaire</li>
+                            <li class="flex items-center gap-2"><i data-lucide="coffee" class="w-4 h-4 text-terracotta"></i> Petit-déjeuner inclus</li>
+                        </ul>
+                        <button type="button" onclick="selectRoom('standard')" class="mt-auto w-full py-3.5 px-5 rounded-xl border-2 border-forest text-forest font-semibold text-sm hover:bg-forest hover:text-white transition-colors cursor-pointer">
+                            Choisir cette chambre
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Carte 2 : Bungalow Vue Lac (Recommandé) -->
+                <article class="bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col ring-2 ring-terracotta relative reveal group">
+                    <div class="absolute top-4 right-4 z-10 bg-terracotta text-forest-dark text-xs font-bold px-3.5 py-1.5 rounded-full shadow-md">
+                        Coup de cœur
+                    </div>
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80" 
+                             onerror="this.src='https://placehold.co/600x400/1B4332/D4A373?text=Bungalow+Vue+Lac'" 
+                             alt="Bungalow Vue sur le Lac Ossa" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-4 left-4 bg-lake/90 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                            Première ligne Lac
+                        </span>
+                    </div>
+                    <div class="p-6 sm:p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start gap-2 mb-3">
+                            <h3 class="font-serif text-2xl font-bold text-forest">Bungalow Vue Lac</h3>
+                            <div class="text-right">
+                                <span class="block text-lg font-bold text-forest price-tag" data-xaf="55000">55 000 FCFA</span>
+                                <span class="text-xs text-stone-400">/ nuit</span>
+                            </div>
+                        </div>
+                        <p class="text-stone-600 text-sm leading-relaxed mb-6">
+                            Réveillez-vous face aux reflets dorés du lac Ossa depuis votre terrasse privée en bois avec hamac et salon extérieur.
+                        </p>
+                        <ul class="space-y-2 text-xs text-stone-600 mb-8 border-t border-stone-100 pt-4">
+                            <li class="flex items-center gap-2"><i data-lucide="bed-double" class="w-4 h-4 text-terracotta"></i> Lit King Size + Terrasse privée</li>
+                            <li class="flex items-center gap-2"><i data-lucide="tv" class="w-4 h-4 text-terracotta"></i> TV Canal+, Mini-bar & Wi-Fi</li>
+                            <li class="flex items-center gap-2"><i data-lucide="sunrise" class="w-4 h-4 text-terracotta"></i> Vue imprenable sur le coucher de soleil</li>
+                        </ul>
+                        <button type="button" onclick="selectRoom('bungalow')" class="mt-auto w-full py-3.5 px-5 rounded-xl bg-forest text-white font-semibold text-sm hover:bg-forest-light transition-colors shadow-md cursor-pointer">
+                            Réserver ce bungalow
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Carte 3 : Suite Panoramique Famille -->
+                <article class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col reveal group">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80" 
+                             onerror="this.src='https://placehold.co/600x400/0077B6/F8F5F0?text=Suite+Panoramique'" 
+                             alt="Suite Panoramique Famille" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-4 left-4 bg-forest/90 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                            Espace & Prestige
+                        </span>
+                    </div>
+                    <div class="p-6 sm:p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start gap-2 mb-3">
+                            <h3 class="font-serif text-2xl font-bold text-forest">Suite Panoramique</h3>
+                            <div class="text-right">
+                                <span class="block text-lg font-bold text-forest price-tag" data-xaf="85000">85 000 FCFA</span>
+                                <span class="text-xs text-stone-400">/ nuit</span>
+                            </div>
+                        </div>
+                        <p class="text-stone-600 text-sm leading-relaxed mb-6">
+                            Un vaste espace composé d'une chambre parentale, d'un salon modulable pour les enfants et d'une double terrasse sur l'eau.
+                        </p>
+                        <ul class="space-y-2 text-xs text-stone-600 mb-8 border-t border-stone-100 pt-4">
+                            <li class="flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-terracotta"></i> Jusqu'à 4 personnes (2 adultes, 2 enfants)</li>
+                            <li class="flex items-center gap-2"><i data-lucide="bath" class="w-4 h-4 text-terracotta"></i> Salle d'eau spacieuse & peignoirs</li>
+                            <li class="flex items-center gap-2"><i data-lucide="gift" class="w-4 h-4 text-terracotta"></i> Cocktail de bienvenue offert</li>
+                        </ul>
+                        <button type="button" onclick="selectRoom('suite')" class="mt-auto w-full py-3.5 px-5 rounded-xl border-2 border-forest text-forest font-semibold text-sm hover:bg-forest hover:text-white transition-colors cursor-pointer">
+                            Choisir cette suite
+                        </button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 5. RESTAURANT & LIVRAISON À DOMICILE ==================== -->
+    <section id="restauration" class="py-20 sm:py-28 px-4 sm:px-8 max-w-7xl mx-auto">
+        <!-- En-tête de section -->
+        <div class="text-center max-w-3xl mx-auto mb-14 reveal">
+            <span class="text-xs font-bold uppercase tracking-[0.2em] text-lake block mb-3">Gastronomie & Livraison Express</span>
+            <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-forest mb-4">
+                Restaurant & Livraison à Domicile
+            </h2>
+            <p class="text-stone-600 text-base sm:text-lg">
+                Dégustez nos spécialités du lac sur notre terrasse panoramique ou faites-vous livrer chaud chez vous à <strong>Dizangué</strong>, dans les villages environnants ou à <strong>Édéa</strong> (tous les jours de 11h00 à 21h30).
+            </p>
+            <!-- Accès rapide au QR Code du menu -->
+            <div class="mt-5 inline-flex items-center gap-3 bg-white px-4 py-2.5 rounded-2xl shadow-sm border border-stone-200">
+                <i data-lucide="qr-code" class="w-5 h-5 text-forest"></i>
+                <span class="text-xs sm:text-sm text-stone-600">Menu accessible par scan mobile :</span>
+                <button type="button" onclick="openMenuQrModal()" class="text-xs sm:text-sm font-bold text-forest underline hover:text-terracotta transition-colors cursor-pointer">
+                    Afficher le QR Code Menu
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+            <!-- Colonne Catalogue des Plats (7 cols) -->
+            <div class="lg:col-span-7 space-y-6 reveal">
+                <!-- Filtres Catégories -->
+                <div class="flex flex-wrap gap-2" role="tablist">
+                    <button type="button" onclick="filterMenu('all')" id="filter-all" class="menu-filter px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-forest text-white transition-all cursor-pointer">
+                        Toute la carte
+                    </button>
+                    <button type="button" onclick="filterMenu('lac')" id="filter-lac" class="menu-filter px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-stone-600 border border-stone-200 hover:bg-stone-100 transition-all cursor-pointer">
+                        Poissons du Lac
+                    </button>
+                    <button type="button" onclick="filterMenu('terroir')" id="filter-terroir" class="menu-filter px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-stone-600 border border-stone-200 hover:bg-stone-100 transition-all cursor-pointer">
+                        Plats du Terroir
+                    </button>
+                    <button type="button" onclick="filterMenu('boissons')" id="filter-boissons" class="menu-filter px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-stone-600 border border-stone-200 hover:bg-stone-100 transition-all cursor-pointer">
+                        Boissons & Jus Frais
+                    </button>
+                </div>
+
+                <!-- Grille des plats commandables -->
+                <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <!-- Plat 1 -->
+                    <div class="menu-card bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-stone-100 flex flex-col" data-category="lac">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=700&q=80" onerror="this.src='https://placehold.co/600x400/1B4332/F8F5F0?text=Carpe+Brais%C3%A9e+Lac+Ossa'" alt="Carpe Braisée du Lac Ossa" class="w-full h-full object-cover">
+                            <span class="absolute top-3 left-3 bg-forest/90 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full">Pêche du jour</span>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col">
+                            <h3 class="font-serif font-bold text-lg text-forest mb-1">Carpe Braisée du Lac Ossa</h3>
+                            <p class="text-xs text-stone-500 leading-relaxed mb-4">Carpe entière marinée aux épices douces, plantains mûrs frits, bâton de manioc et piment maison.</p>
+                            <div class="mt-auto pt-3 border-t border-stone-100 flex items-center justify-between">
+                                <span class="font-bold text-forest price-tag" data-xaf="8500">8 500 FCFA</span>
+                                <button type="button" onclick="addToCart('carpe', 'Carpe Braisée du Lac Ossa', 8500)" class="bg-forest hover:bg-forest-light text-white text-xs font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plat 2 -->
+                    <div class="menu-card bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-stone-100 flex flex-col" data-category="lac">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=700&q=80" onerror="this.src='https://placehold.co/600x400/0077B6/F8F5F0?text=Capitaine+Feu+de+Bois'" alt="Brochettes de Capitaine au Feu de Bois" class="w-full h-full object-cover">
+                            <span class="absolute top-3 left-3 bg-terracotta text-forest-dark text-[11px] font-bold px-2.5 py-1 rounded-full">Spécialité Chef</span>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col">
+                            <h3 class="font-serif font-bold text-lg text-forest mb-1">Capitaine au Feu de Bois</h3>
+                            <p class="text-xs text-stone-500 leading-relaxed mb-4">Filets de capitaine frais grillés aux herbes, poivrons croquants et riz parfumé au gingembre.</p>
+                            <div class="mt-auto pt-3 border-t border-stone-100 flex items-center justify-between">
+                                <span class="font-bold text-forest price-tag" data-xaf="9500">9 500 FCFA</span>
+                                <button type="button" onclick="addToCart('capitaine', 'Capitaine au Feu de Bois', 9500)" class="bg-forest hover:bg-forest-light text-white text-xs font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plat 3 -->
+                    <div class="menu-card bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-stone-100 flex flex-col" data-category="terroir">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=700&q=80" onerror="this.src='https://placehold.co/600x400/2D6A4F/F8F5F0?text=Ndol%C3%A8+Royal+Crevettes'" alt="Ndolè Royal aux Crevettes d'Édéa" class="w-full h-full object-cover">
+                            <span class="absolute top-3 left-3 bg-forest/90 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full">Terroir Littoral</span>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col">
+                            <h3 class="font-serif font-bold text-lg text-forest mb-1">Ndolè Royal aux Crevettes</h3>
+                            <p class="text-xs text-stone-500 leading-relaxed mb-4">Ndolè mijoté aux crevettes fraîches d'Édéa et viande de bœuf tendre, servi avec miondo ou plantains.</p>
+                            <div class="mt-auto pt-3 border-t border-stone-100 flex items-center justify-between">
+                                <span class="font-bold text-forest price-tag" data-xaf="9000">9 000 FCFA</span>
+                                <button type="button" onclick="addToCart('ndole', 'Ndolè Royal aux Crevettes', 9000)" class="bg-forest hover:bg-forest-light text-white text-xs font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plat 4 -->
+                    <div class="menu-card bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-stone-100 flex flex-col" data-category="terroir">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=700&q=80" onerror="this.src='https://placehold.co/600x400/D4A373/1B4332?text=Poulet+DG+Traditionnel'" alt="Poulet DG Traditionnel" class="w-full h-full object-cover">
+                            <span class="absolute top-3 left-3 bg-forest/90 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full">Classique</span>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col">
+                            <h3 class="font-serif font-bold text-lg text-forest mb-1">Poulet DG du Chef</h3>
+                            <p class="text-xs text-stone-500 leading-relaxed mb-4">Poulet fermier doré, rondelles de plantains mûrs fondants, légumes frais du marché et aromates.</p>
+                            <div class="mt-auto pt-3 border-t border-stone-100 flex items-center justify-between">
+                                <span class="font-bold text-forest price-tag" data-xaf="8500">8 500 FCFA</span>
+                                <button type="button" onclick="addToCart('pouletdg', 'Poulet DG du Chef', 8500)" class="bg-forest hover:bg-forest-light text-white text-xs font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plat 5 -->
+                    <div class="menu-card bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-stone-100 flex flex-col" data-category="terroir">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=700&q=80" onerror="this.src='https://placehold.co/600x400/1B4332/D4A373?text=Brochettes+Boeuf+Penja'" alt="Brochettes de Filet de Bœuf au Poivre de Penja" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col">
+                            <h3 class="font-serif font-bold text-lg text-forest mb-1">Brochettes de Bœuf & Poivre de Penja</h3>
+                            <p class="text-xs text-stone-500 leading-relaxed mb-4">Tendre filet de bœuf grillé, sauce crémeuse au poivre blanc de Penja et pommes sautées maison.</p>
+                            <div class="mt-auto pt-3 border-t border-stone-100 flex items-center justify-between">
+                                <span class="font-bold text-forest price-tag" data-xaf="10000">10 000 FCFA</span>
+                                <button type="button" onclick="addToCart('brochettes', 'Brochettes de Bœuf & Poivre de Penja', 10000)" class="bg-forest hover:bg-forest-light text-white text-xs font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plat 6 -->
+                    <div class="menu-card bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-stone-100 flex flex-col" data-category="boissons">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=700&q=80" onerror="this.src='https://placehold.co/600x400/D4A373/1B4332?text=Jus+Bissap+Gingembre'" alt="Jus Naturel Bissap & Gingembre" class="w-full h-full object-cover">
+                            <span class="absolute top-3 left-3 bg-lake text-white text-[11px] font-semibold px-2.5 py-1 rounded-full">100% Naturel</span>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col">
+                            <h3 class="font-serif font-bold text-lg text-forest mb-1">Élixir Bissap & Gingembre (1L)</h3>
+                            <p class="text-xs text-stone-500 leading-relaxed mb-4">Bouteille d'infusion glacée de fleurs d'hibiscus, gingembre frais pressé, ananas et menthe du jardin.</p>
+                            <div class="mt-auto pt-3 border-t border-stone-100 flex items-center justify-between">
+                                <span class="font-bold text-forest price-tag" data-xaf="2500">2 500 FCFA</span>
+                                <button type="button" onclick="addToCart('bissap', 'Élixir Bissap & Gingembre (1L)', 2500)" class="bg-forest hover:bg-forest-light text-white text-xs font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne Panier & Commande Livraison (5 cols) -->
+            <div id="panier-livraison" class="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-stone-200 lg:sticky lg:top-24 reveal">
+                <div class="flex items-center justify-between pb-4 mb-5 border-b border-stone-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-10 h-10 rounded-xl bg-forest text-terracotta flex items-center justify-center">
+                            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-serif text-xl font-bold text-forest">Votre Commande</h3>
+                            <p class="text-xs text-stone-500">Livraison chaude ou retrait sur place</p>
+                        </div>
+                    </div>
+                    <span id="cart-count-label" class="text-xs font-bold px-3 py-1 rounded-full bg-sand text-forest">0 article</span>
+                </div>
+
+                <!-- Liste dynamique des articles du panier -->
+                <div id="cart-items-container" class="space-y-3 max-h-60 overflow-y-auto pr-1 mb-5">
+                    <div class="text-center py-8 px-4 bg-sand/70 rounded-2xl border border-dashed border-stone-300">
+                        <i data-lucide="utensils" class="w-8 h-8 text-stone-400 mx-auto mb-2"></i>
+                        <p class="text-sm font-medium text-stone-600">Votre panier est vide</p>
+                        <p class="text-xs text-stone-400 mt-1">Cliquez sur « + Ajouter » sur les plats de votre choix.</p>
+                    </div>
+                </div>
+
+                <!-- Formulaire de Livraison & Paiement Mobile -->
+                <form id="delivery-form" class="space-y-4 pt-4 border-t border-stone-100">
+                    <!-- Zone de livraison -->
+                    <div>
+                        <label for="delivery-zone" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1.5">Zone de livraison *</label>
+                        <select id="delivery-zone" onchange="renderCart()" class="w-full px-3.5 py-2.5 rounded-xl bg-sand border border-stone-200 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-forest">
+                            <option value="0" data-label="Retrait au restaurant (Club Lac Ossa)">Retrait sur place au restaurant — Gratuit (0 FCFA)</option>
+                            <option value="1000" data-label="Dizangué Centre" selected>Dizangué Centre — +1 000 FCFA</option>
+                            <option value="1500" data-label="Périphérie & Villages proches">Périphérie & Villages proches — +1 500 FCFA</option>
+                            <option value="2500" data-label="Édéa Ville">Édéa Ville — +2 500 FCFA</option>
+                        </select>
+                    </div>
+
+                    <!-- Coordonnées client -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label for="delivery-name" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">Nom complet *</label>
+                            <input type="text" id="delivery-name" required placeholder="Votre nom" class="w-full px-3.5 py-2.5 rounded-xl bg-sand border border-stone-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-forest">
+                        </div>
+                        <div>
+                            <label for="delivery-phone" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">Téléphone *</label>
+                            <input type="tel" id="delivery-phone" required placeholder="6XX XX XX XX" class="w-full px-3.5 py-2.5 rounded-xl bg-sand border border-stone-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-forest">
+                        </div>
+                    </div>
+
+                    <div id="address-field-wrapper">
+                        <label for="delivery-address" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">Quartier & Point de repère *</label>
+                        <input type="text" id="delivery-address" required placeholder="Ex: Quartier Administratif, face à la pharmacie..." class="w-full px-3.5 py-2.5 rounded-xl bg-sand border border-stone-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-forest">
+                    </div>
+
+                    <!-- Mode de Paiement (Orange Money / MTN MoMo / Cash) -->
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-2">Mode de paiement *</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="delivery-payment" value="Orange Money" class="peer sr-only" checked>
+                                <div class="p-2.5 rounded-xl border border-stone-200 bg-sand peer-checked:border-[#FF7900] peer-checked:bg-[#FF7900]/10 text-center transition-all">
+                                    <span class="block w-3 h-3 rounded-full bg-[#FF7900] mx-auto mb-1"></span>
+                                    <span class="text-[11px] font-bold text-stone-800 block">Orange Money</span>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="delivery-payment" value="MTN Mobile Money" class="peer sr-only">
+                                <div class="p-2.5 rounded-xl border border-stone-200 bg-sand peer-checked:border-[#FFCC00] peer-checked:bg-[#FFCC00]/15 text-center transition-all">
+                                    <span class="block w-3 h-3 rounded-full bg-[#FFCC00] mx-auto mb-1"></span>
+                                    <span class="text-[11px] font-bold text-stone-800 block">MTN MoMo</span>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="delivery-payment" value="Espèces à la livraison" class="peer sr-only">
+                                <div class="p-2.5 rounded-xl border border-stone-200 bg-sand peer-checked:border-forest peer-checked:bg-forest/10 text-center transition-all">
+                                    <span class="block w-3 h-3 rounded-full bg-forest mx-auto mb-1"></span>
+                                    <span class="text-[11px] font-bold text-stone-800 block">À la livraison</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Récapitulatif Totaux -->
+                    <div class="bg-sand rounded-2xl p-4 space-y-1.5 text-xs sm:text-sm border border-stone-200">
+                        <div class="flex justify-between text-stone-600">
+                            <span>Sous-total plats :</span>
+                            <span id="cart-subtotal" class="font-semibold">0 FCFA</span>
+                        </div>
+                        <div class="flex justify-between text-stone-600">
+                            <span>Frais de livraison :</span>
+                            <span id="cart-delivery-fee" class="font-semibold">1 000 FCFA</span>
+                        </div>
+                        <div class="flex justify-between text-base font-bold text-forest pt-2 border-t border-stone-200">
+                            <span>Total à payer :</span>
+                            <span id="cart-total">1 000 FCFA</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-delivery-btn" class="w-full bg-forest hover:bg-forest-light text-white font-bold text-sm py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+                        <i data-lucide="bike" class="w-4 h-4 text-terracotta"></i>
+                        <span>Valider & Payer ma commande</span>
+                    </button>
+                </form>
+
+                <!-- Encart QR Code Menu directement sous le panier -->
+                <div class="mt-6 pt-5 border-t border-stone-100 flex items-center justify-between gap-4 bg-sand/70 p-3.5 rounded-2xl">
+                    <div id="inline-menu-qr" class="w-16 h-16 bg-white p-1.5 rounded-xl border border-stone-200 shrink-0 flex items-center justify-center"></div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold text-forest">QR Code Carte & Livraison</p>
+                        <p class="text-[11px] text-stone-500 leading-snug mt-0.5">Scannez ou partagez ce QR code pour ouvrir directement le menu du restaurant.</p>
+                    </div>
+                    <button type="button" onclick="openMenuQrModal()" class="px-3 py-2 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-xs font-semibold text-forest shrink-0 cursor-pointer">
+                        Agrandir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 6. EXCURSIONS & ACTIVITÉS SUR LE LAC ==================== -->
+    <section id="activites" class="py-20 sm:py-28 bg-forest-dark text-white px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- En-tête de section -->
+            <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-terracotta block mb-3">Aventures & Découvertes</span>
+                <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+                    Excursions & Activités au Lac Ossa
+                </h2>
+                <p class="text-stone-300 text-base sm:text-lg">
+                    Explorez la réserve faunique du Lac Ossa accompagné de nos guides locaux expérimentés, au départ direct du ponton privé de l'hôtel.
+                </p>
+            </div>
+
+            <!-- Grille des 4 activités phares -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Activité 1 : Observation des Lamantins -->
+                <article class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden flex flex-col hover:bg-white/10 transition-all reveal group">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=700&q=80"
+                             onerror="this.src='https://placehold.co/600x400/2D6A4F/F8F5F0?text=Observation+Lamantins'"
+                             alt="Observation des lamantins d'Afrique sur le Lac Ossa"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-terracotta text-forest-dark text-[11px] font-bold px-3 py-1 rounded-full">
+                            Incontournable
+                        </span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex items-center gap-2 text-terracotta text-xs font-semibold mb-2">
+                            <i data-lucide="binoculars" class="w-4 h-4"></i>
+                            <span>2h30 • Matin tôt (06h30)</span>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-white mb-2">Observation des Lamantins</h3>
+                        <p class="text-stone-300 text-xs leading-relaxed mb-5">
+                            Sortie silencieuse en pirogue traditionnelle dans les criques protégées pour observer les lamantins d'Afrique et les oiseaux aquatiques.
+                        </p>
+                        <div class="mt-auto pt-4 border-t border-white/10 flex items-center justify-between gap-2">
+                            <div>
+                                <span class="text-[11px] text-stone-400 block">Tarif / pers.</span>
+                                <span class="font-bold text-terracotta price-tag" data-xaf="15000">15 000 FCFA</span>
+                            </div>
+                            <button type="button" onclick="bookExcursion('Observation des Lamantins (15 000 FCFA/pers.)')" class="px-3.5 py-2 rounded-xl bg-terracotta hover:bg-terracotta-hover text-forest-dark text-xs font-bold transition-colors cursor-pointer">
+                                Réserver
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Activité 2 : Balade en Pirogue & Îlots -->
+                <article class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden flex flex-col hover:bg-white/10 transition-all reveal group">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=700&q=80"
+                             onerror="this.src='https://placehold.co/600x400/0077B6/F8F5F0?text=Tour+des+Ilots+Lac+Ossa'"
+                             alt="Balade en bateau et découverte des îlots"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-lake text-white text-[11px] font-semibold px-3 py-1 rounded-full">
+                            Famille & Groupe
+                        </span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex items-center gap-2 text-terracotta text-xs font-semibold mb-2">
+                            <i data-lucide="compass" class="w-4 h-4"></i>
+                            <span>2h00 • Départ à la demande</span>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-white mb-2">Tour des Îlots & Villages</h3>
+                        <p class="text-stone-300 text-xs leading-relaxed mb-5">
+                            Navigation panoramique entre les îlots verdoyants du lac, découverte des techniques de pêche artisanale et escale photo.
+                        </p>
+                        <div class="mt-auto pt-4 border-t border-white/10 flex items-center justify-between gap-2">
+                            <div>
+                                <span class="text-[11px] text-stone-400 block">Tarif / pers.</span>
+                                <span class="font-bold text-terracotta price-tag" data-xaf="10000">10 000 FCFA</span>
+                            </div>
+                            <button type="button" onclick="bookExcursion('Tour des Îlots & Villages (10 000 FCFA/pers.)')" class="px-3.5 py-2 rounded-xl bg-terracotta hover:bg-terracotta-hover text-forest-dark text-xs font-bold transition-colors cursor-pointer">
+                                Réserver
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Activité 3 : Pêche Sportive -->
+                <article class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden flex flex-col hover:bg-white/10 transition-all reveal group">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1516939884455-1445c8652f83?auto=format&fit=crop&w=700&q=80"
+                             onerror="this.src='https://placehold.co/600x400/1B4332/D4A373?text=Peche+Sportive+Lac+Ossa'"
+                             alt="Pêche sportive sur le Lac Ossa"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex items-center gap-2 text-terracotta text-xs font-semibold mb-2">
+                            <i data-lucide="anchor" class="w-4 h-4"></i>
+                            <span>3h00 • Équipement fourni</span>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-white mb-2">Pêche Sportive sur le Lac</h3>
+                        <p class="text-stone-300 text-xs leading-relaxed mb-5">
+                            Taquinez la carpe, le silure et le capitaine avec notre guide pêcheur. Notre chef peut ensuite braiser votre prise pour le dîner !
+                        </p>
+                        <div class="mt-auto pt-4 border-t border-white/10 flex items-center justify-between gap-2">
+                            <div>
+                                <span class="text-[11px] text-stone-400 block">Tarif / pers.</span>
+                                <span class="font-bold text-terracotta price-tag" data-xaf="12000">12 000 FCFA</span>
+                            </div>
+                            <button type="button" onclick="bookExcursion('Pêche Sportive sur le Lac (12 000 FCFA/pers.)')" class="px-3.5 py-2 rounded-xl bg-terracotta hover:bg-terracotta-hover text-forest-dark text-xs font-bold transition-colors cursor-pointer">
+                                Réserver
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Activité 4 : Croisière Coucher de Soleil -->
+                <article class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden flex flex-col hover:bg-white/10 transition-all reveal group">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80"
+                             onerror="this.src='https://placehold.co/600x400/D4A373/081C15?text=Coucher+de+Soleil+Lac+Ossa'"
+                             alt="Coucher de soleil romantique sur le Lac Ossa"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-white/20 backdrop-blur-md text-white text-[11px] font-semibold px-3 py-1 rounded-full">
+                            Romantique
+                        </span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex items-center gap-2 text-terracotta text-xs font-semibold mb-2">
+                            <i data-lucide="sunset" class="w-4 h-4"></i>
+                            <span>1h30 • À partir de 17h00</span>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-white mb-2">Apéro Coucher de Soleil</h3>
+                        <p class="text-stone-300 text-xs leading-relaxed mb-5">
+                            Admirez le soleil plonger dans les eaux calmes du lac avec cocktail de fruits tropicaux et amuses-bouches servis à bord.
+                        </p>
+                        <div class="mt-auto pt-4 border-t border-white/10 flex items-center justify-between gap-2">
+                            <div>
+                                <span class="text-[11px] text-stone-400 block">Forfait duo</span>
+                                <span class="font-bold text-terracotta price-tag" data-xaf="20000">20 000 FCFA</span>
+                            </div>
+                            <button type="button" onclick="bookExcursion('Apéro Coucher de Soleil Duo (20 000 FCFA)')" class="px-3.5 py-2 rounded-xl bg-terracotta hover:bg-terracotta-hover text-forest-dark text-xs font-bold transition-colors cursor-pointer">
+                                Réserver
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 7. FORMULAIRE DE RÉSERVATION & CONTACT ==================== -->
+    <section id="reservation" class="py-20 sm:py-28 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            
+            <!-- Colonne Formulaire Interactif (7 colonnes) -->
+            <div class="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-stone-100 reveal">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-lake block mb-2">Réservation Directe</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-forest mb-2">Réservez votre séjour</h2>
+                <p class="text-stone-500 text-sm mb-8">Meilleur tarif garanti sans intermédiaire. Réglez par Orange Money, MTN MoMo ou sur place.</p>
+
+                <form id="booking-form" class="space-y-5">
+                    <!-- Choix de la chambre -->
+                    <div>
+                        <label for="room-type" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1.5">Type d'hébergement *</label>
+                        <select id="room-type" onchange="calculateTotal()" class="w-full px-4 py-3.5 rounded-xl bg-sand border border-stone-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-forest">
+                            <option value="standard" data-price="35000">Chambre Standard Jardin — 35 000 FCFA / nuit</option>
+                            <option value="bungalow" data-price="55000" selected>Bungalow Vue sur le Lac — 55 000 FCFA / nuit</option>
+                            <option value="suite" data-price="85000">Suite Panoramique Prestige — 85 000 FCFA / nuit</option>
+                        </select>
+                    </div>
+
+                    <!-- Dates Arrivée & Départ -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="checkin-date" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1.5">Date d'arrivée *</label>
+                            <input type="date" id="checkin-date" required onchange="calculateTotal()" class="w-full px-4 py-3 rounded-xl bg-sand border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-forest">
+                        </div>
+                        <div>
+                            <label for="checkout-date" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1.5">Date de départ *</label>
+                            <input type="date" id="checkout-date" required onchange="calculateTotal()" class="w-full px-4 py-3 rounded-xl bg-sand border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-forest">
+                        </div>
+                    </div>
+
+                    <!-- Nombre d'adultes et d'enfants -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="adults-count" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1.5">Adultes</label>
+                            <select id="adults-count" class="w-full px-4 py-3 rounded-xl bg-sand border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-forest">
+                                <option value="1">1 Adulte</option>
+                                <option value="2" selected>2 Adultes</option>
+                                <option value="3">3 Adultes</option>
+                                <option value="4">4 Adultes</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="children-count" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1.5">Enfants (-12 ans)</label>
+                            <select id="children-count" class="w-full px-4 py-3 rounded-xl bg-sand border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-forest">
+                                <option value="0" selected>Aucun enfant</option>
+                                <option value="1">1 Enfant</option>
+                                <option value="2">2 Enfants</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Coordonnées Client -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="guest-name" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1.5">Nom & Prénom *</label>
+                            <input type="text" id="guest-name" required placeholder="Ex: Jean-Paul Mbarga" class="w-full px-4 py-3 rounded-xl bg-sand border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-forest">
+                        </div>
+                        <div>
+                            <label for="guest-phone" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1.5">Téléphone / WhatsApp *</label>
+                            <input type="tel" id="guest-phone" required placeholder="Ex: +237 6XX XX XX XX" class="w-full px-4 py-3 rounded-xl bg-sand border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-forest">
+                        </div>
+                    </div>
+
+                    <!-- Demandes spéciales -->
+                    <div>
+                        <label for="special-requests" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1.5">Demandes spéciales (Optionnel)</label>
+                        <textarea id="special-requests" rows="2" placeholder="Ex: Excursion en pirogue souhaitée, arrivée tardive, lit bébé, anniversaire..." class="w-full px-4 py-3 rounded-xl bg-sand border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-forest"></textarea>
+                    </div>
+
+                    <!-- Choix du mode de règlement pour la réservation -->
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-2">Mode de confirmation & paiement *</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="booking-payment" value="Orange Money" class="peer sr-only" checked>
+                                <div class="p-3 rounded-xl border border-stone-200 bg-sand peer-checked:border-[#FF7900] peer-checked:bg-[#FF7900]/10 flex items-center gap-2.5 transition-all">
+                                    <span class="w-3.5 h-3.5 rounded-full bg-[#FF7900] shrink-0"></span>
+                                    <div>
+                                        <span class="text-xs font-bold text-stone-800 block">Orange Money</span>
+                                        <span class="text-[10px] text-stone-500">Confirmation immédiate</span>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="booking-payment" value="MTN Mobile Money" class="peer sr-only">
+                                <div class="p-3 rounded-xl border border-stone-200 bg-sand peer-checked:border-[#FFCC00] peer-checked:bg-[#FFCC00]/15 flex items-center gap-2.5 transition-all">
+                                    <span class="w-3.5 h-3.5 rounded-full bg-[#FFCC00] shrink-0"></span>
+                                    <div>
+                                        <span class="text-xs font-bold text-stone-800 block">MTN MoMo</span>
+                                        <span class="text-[10px] text-stone-500">Confirmation immédiate</span>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="booking-payment" value="Paiement sur place" class="peer sr-only">
+                                <div class="p-3 rounded-xl border border-stone-200 bg-sand peer-checked:border-forest peer-checked:bg-forest/10 flex items-center gap-2.5 transition-all">
+                                    <span class="w-3.5 h-3.5 rounded-full bg-forest shrink-0"></span>
+                                    <div>
+                                        <span class="text-xs font-bold text-stone-800 block">Sur place</span>
+                                        <span class="text-[10px] text-stone-500">À l'arrivée à l'hôtel</span>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Récapitulatif Dynamique du Prix -->
+                    <div class="bg-forest/5 border border-forest/15 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-forest block">Estimation de votre séjour</span>
+                            <span id="nights-summary" class="text-sm text-stone-600">1 nuit • Bungalow Vue sur le Lac</span>
+                        </div>
+                        <div class="sm:text-right">
+                            <span id="total-estimate" class="font-serif text-2xl sm:text-3xl font-bold text-forest block">55 000 FCFA</span>
+                            <span class="text-[11px] text-stone-500">Taxes incluses • Orange Money, MTN MoMo ou Espèces</span>
+                        </div>
+                    </div>
+
+                    <!-- Bouton de Soumission -->
+                    <button type="submit" class="w-full bg-forest hover:bg-forest-light text-white font-bold text-base py-4 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+                        <i data-lucide="check-circle" class="w-5 h-5 text-terracotta"></i>
+                        <span>Confirmer ma réservation</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Colonne Informations d'Accès & Carte (5 colonnes) -->
+            <div class="lg:col-span-5 space-y-6 reveal">
+                <div class="bg-forest-dark text-white rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+                    <h3 class="font-serif text-2xl font-bold text-terracotta">Comment nous rejoindre ?</h3>
+                    
+                    <div class="space-y-4 text-sm text-stone-300">
+                        <div class="flex items-start gap-3.5">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-terracotta shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="font-semibold text-white">Adresse</p>
+                                <p>Rives du Lac Ossa, Arrondissement de Dizangué, Département de la Sanaga-Maritime, Littoral, Cameroun.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3.5">
+                            <i data-lucide="car" class="w-5 h-5 text-terracotta shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="font-semibold text-white">Itinéraire depuis Douala (env. 1h30)</p>
+                                <p>Prendre la Route Nationale N3 direction Édéa. Juste avant le pont d'Édéa, bifurquer vers Dizangué (route bitumée, 12 km jusqu'au lac).</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3.5">
+                            <i data-lucide="phone-call" class="w-5 h-5 text-terracotta shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="font-semibold text-white">Réception, Livraisons & WhatsApp</p>
+                                <p>+237 6 99 00 00 00 / +237 6 77 00 00 00</p>
+                                <p class="text-xs text-stone-400 mt-0.5">contact@clublacossa.cm</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carte intégrée centrée sur Dizangué / Lac Ossa -->
+                    <div class="rounded-2xl overflow-hidden h-56 border border-white/15">
+                        <iframe 
+                            title="Carte de localisation du Club Lac Ossa à Dizangué"
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=9.9850%2C3.7550%2C10.0450%2C3.8050&amp;layer=mapnik&amp;marker=3.7800%2C10.0150" 
+                            class="w-full h-full border-0"
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 8. PIED DE PAGE (FOOTER) ==================== -->
+    <footer class="bg-forest-dark text-stone-400 py-14 px-4 sm:px-8 border-t border-white/10">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <span class="font-serif text-2xl font-bold text-white block">Club Lac Ossa</span>
+                <p class="text-xs mt-1 text-stone-400">Hôtel • Restaurant • Livraison à Domicile • Dizangué, Cameroun</p>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-6 text-xs font-medium text-stone-300">
+                <a href="#accueil" class="hover:text-terracotta transition-colors">Accueil</a>
+                <a href="#hebergement" class="hover:text-terracotta transition-colors">Chambres</a>
+                <a href="#restauration" class="hover:text-terracotta transition-colors">Restaurant & Livraison</a>
+                <a href="#activites" class="hover:text-terracotta transition-colors">Activités</a>
+                <a href="#reservation" class="hover:text-terracotta transition-colors">Réserver</a>
+            </div>
+
+            <p class="text-xs text-stone-500">
+                © 2026 Club Lac Ossa. Tous droits réservés.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ==================== BOUTON FLOTTANT WHATSAPP ==================== -->
+    <a href="https://wa.me/237699000000?text=Bonjour%20Club%20Lac%20Ossa%2C%20je%20souhaite%20avoir%20des%20informations%20pour%20un%20s%C3%A9jour%20ou%20une%20commande." 
+       target="_blank" 
+       rel="noopener noreferrer"
+       aria-label="Discuter sur WhatsApp"
+       class="fixed bottom-6 right-6 z-40 bg-[#25D366] hover:bg-[#20bd5a] text-white p-4 rounded-full shadow-2xl flex items-center gap-2 transition-transform hover:scale-105 group">
+        <i data-lucide="message-circle" class="w-6 h-6"></i>
+        <span class="hidden sm:inline text-sm font-semibold pr-1">WhatsApp Direct</span>
+    </a>
+
+    <!-- ==================== MODALE DE PAIEMENT MOBILE MONEY & CONFIRMATION WHATSAPP ==================== -->
+    <div id="confirmation-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-forest-dark/80 backdrop-blur-sm overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-stone-100 relative my-8">
+            <button type="button" onclick="closeModal()" aria-label="Fermer" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-sand hover:bg-stone-200 flex items-center justify-center text-stone-600 cursor-pointer">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div id="modal-icon-badge" class="w-12 h-12 rounded-2xl bg-forest/10 text-forest flex items-center justify-center shrink-0">
+                    <i data-lucide="smartphone" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <span id="modal-type-label" class="text-[11px] font-bold uppercase tracking-wider text-lake block">Confirmation & Règlement</span>
+                    <h3 id="modal-title" class="font-serif text-2xl font-bold text-forest">Finaliser votre demande</h3>
+                </div>
+            </div>
+
+            <!-- Récapitulatif encadré -->
+            <div id="modal-summary-box" class="bg-sand rounded-2xl p-4 text-xs sm:text-sm text-stone-700 space-y-1.5 mb-5 border border-stone-200 font-medium">
+                <!-- Rempli dynamiquement par JS -->
+            </div>
+
+            <!-- Section interactive Orange Money / MTN MoMo (affichée uniquement si Mobile Money choisi) -->
+            <div id="mobile-money-panel" class="hidden mb-5 rounded-2xl p-4 sm:p-5 border-2 transition-all">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <span id="momo-operator-dot" class="w-3.5 h-3.5 rounded-full"></span>
+                        <span id="momo-operator-name" class="font-bold text-sm text-stone-900">Paiement Orange Money</span>
+                    </div>
+                    <span id="momo-ussd-code" class="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-800">#150#</span>
+                </div>
+
+                <div class="bg-white rounded-xl p-3.5 border border-stone-200 space-y-2 text-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-stone-500">Montant exact à transférer :</span>
+                        <span id="momo-exact-amount" class="font-bold text-base text-forest">0 FCFA</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-stone-500">Compte bénéficiaire :</span>
+                        <span id="momo-account-holder" class="font-semibold text-stone-800">Club Lac Ossa</span>
+                    </div>
+                    <div class="flex items-center justify-between pt-1 border-t border-stone-100">
+                        <div>
+                            <span class="text-stone-500 block">Numéro marchand :</span>
+                            <span id="momo-merchant-number" class="font-mono font-bold text-sm text-stone-900">+237 699 00 00 00</span>
+                        </div>
+                        <button type="button" onclick="copyMerchantNumber()" class="px-3 py-1.5 rounded-lg bg-sand hover:bg-stone-200 text-forest font-semibold text-xs flex items-center gap-1 cursor-pointer">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <span id="copy-momo-text">Copier</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-3">
+                    <div>
+                        <label for="momo-sender-phone" class="block text-[11px] font-semibold text-stone-700 mb-1">Votre numéro payeur</label>
+                        <input type="tel" id="momo-sender-phone" oninput="updateWhatsAppLink()" placeholder="6XX XX XX XX" class="w-full px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-forest">
+                    </div>
+                    <div>
+                        <label for="momo-tx-id" class="block text-[11px] font-semibold text-stone-700 mb-1">ID Transaction SMS (optionnel)</label>
+                        <input type="text" id="momo-tx-id" oninput="updateWhatsAppLink()" placeholder="Ex: MP261116.1234..." class="w-full px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-forest">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bouton d'envoi vers WhatsApp -->
+            <a id="whatsapp-confirm-btn" href="https://wa.me/237699000000" target="_blank" rel="noopener noreferrer" class="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm py-3.5 px-5 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all">
+                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                <span>Envoyer la confirmation sur WhatsApp</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ==================== MODALE QR CODE MENU RESTAURANT ==================== -->
+    <div id="menu-qr-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-forest-dark/80 backdrop-blur-sm overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-stone-100 relative my-8 text-center">
+            <button type="button" onclick="closeMenuQrModal()" aria-label="Fermer le QR Code" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-sand hover:bg-stone-200 flex items-center justify-center text-stone-600 cursor-pointer">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="w-12 h-12 rounded-2xl bg-forest/10 text-forest flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="qr-code" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-lake block">Scan Rapide • Restaurant</span>
+            <h3 class="font-serif text-2xl font-bold text-forest mt-1">Menu du Club Lac Ossa</h3>
+            <p class="text-xs sm:text-sm text-stone-500 mt-1.5 mb-5">
+                Scannez ce QR Code avec l'appareil photo de votre téléphone pour accéder directement à la carte et commander en livraison.
+            </p>
+
+            <!-- Conteneur du QR Code généré -->
+            <div class="bg-sand p-5 rounded-3xl border border-stone-200 inline-flex flex-col items-center justify-center mb-4">
+                <div id="modal-menu-qr" class="bg-white p-3 rounded-2xl shadow-sm"></div>
+                <span id="qr-target-url-label" class="text-[10px] font-mono text-stone-500 mt-3 break-all max-w-[240px]"></span>
+            </div>
+
+            <!-- Option URL personnalisée une fois le site hébergé -->
+            <div class="text-left mb-5">
+                <label for="custom-menu-url" class="block text-[11px] font-semibold uppercase tracking-wider text-stone-600 mb-1">Lien du site (optionnel, avant mise en ligne)</label>
+                <input type="url" id="custom-menu-url" oninput="refreshMenuQrCodes()" placeholder="Ex: https://clublacossa.cm/#restauration" class="w-full px-3.5 py-2 rounded-xl bg-sand border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-forest">
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2.5">
+                <a href="#restauration" onclick="closeMenuQrModal()" class="flex-1 bg-forest hover:bg-forest-light text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2">
+                    <i data-lucide="utensils" class="w-4 h-4 text-terracotta"></i>
+                    <span>Aller au Menu</span>
+                </a>
+                <button type="button" onclick="printMenuQr()" class="bg-sand hover:bg-stone-200 text-stone-800 font-semibold text-xs sm:text-sm py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i data-lucide="printer" class="w-4 h-4"></i>
+                    <span>Imprimer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== NOTIFICATION TOAST ==================== -->
+    <div id="toast-notification" class="fixed bottom-20 right-6 z-50 hidden bg-forest-dark text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-2xl shadow-2xl border border-white/15 flex items-center gap-2.5">
+        <i data-lucide="check-circle" class="w-4 h-4 text-terracotta shrink-0"></i>
+        <span id="toast-message">Plat ajouté au panier</span>
+    </div>
+
+    <!-- ==================== JAVASCRIPT INTERACTIF ==================== -->
+    <script>
+        // Initialisation sécurisée des icônes Lucide
+        function initIcons() {
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+        }
+        initIcons();
+        window.addEventListener('load', initIcons);
+
+        // État global de la devise (Parité fixe XAF <-> EUR : 1 EUR = 655.957 FCFA)
+        let currentCurrency = 'XAF';
+        const EUR_RATE = 655.957;
+
+        // Numéros marchands de l'hôtel (à remplacer par vos vrais numéros)
+        const MERCHANT_ACCOUNTS = {
+            'Orange Money': {
+                number: '+237 699 00 00 00',
+                ussd: '#150*1*1*699000000#',
+                holder: 'Club Lac Ossa — Orange Money',
+                color: '#FF7900',
+                bgClass: 'bg-[#FF7900]/10 border-[#FF7900]'
+            },
+            'MTN Mobile Money': {
+                number: '+237 677 00 00 00',
+                ussd: '*126*1*1*677000000#',
+                holder: 'Club Lac Ossa — MTN MoMo',
+                color: '#FFCC00',
+                bgClass: 'bg-[#FFCC00]/15 border-[#FFCC00]'
+            }
+        };
+
+        // État du panier de livraison
+        let deliveryCart = [];
+
+        // Contexte actif dans la modale
+        let activeModalContext = null;
+
+        // Tarifs des chambres en FCFA
+        const ROOM_DETAILS = {
+            standard: { name: 'Chambre Standard Jardin', priceXAF: 35000 },
+            bungalow: { name: 'Bungalow Vue sur le Lac', priceXAF: 55000 },
+            suite: { name: 'Suite Panoramique Prestige', priceXAF: 85000 }
+        };
+
+        // ==================== QR CODE MENU RESTAURANT ====================
+
+        /**
+         * Construit l'URL ciblant directement la section du menu (#restauration)
+         */
+        function getMenuTargetUrl() {
+            const customInput = document.getElementById('custom-menu-url');
+            const customVal = customInput ? customInput.value.trim() : '';
+            if (customVal) {
+                return customVal.includes('#') ? customVal : `${customVal}#restauration`;
+            }
+            const baseUrl = window.location.href.split('#')[0];
+            return `${baseUrl}#restauration`;
+        }
+
+        /**
+         * Génère ou met à jour le QR Code dans un conteneur donné
+         */
+        function renderQrIntoContainer(containerId, targetUrl, sizePx) {
+            const container = document.getElementById(containerId);
+            if (!container || typeof QRCode === 'undefined') return;
+            container.innerHTML = '';
+            new QRCode(container, {
+                text: targetUrl,
+                width: sizePx,
+                height: sizePx,
+                colorDark: '#081C15',
+                colorLight: '#FFFFFF',
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        }
+
+        /**
+         * Actualise les QR Codes (aperçu panier + modale)
+         */
+        function refreshMenuQrCodes() {
+            const targetUrl = getMenuTargetUrl();
+            const labelEl = document.getElementById('qr-target-url-label');
+            if (labelEl) {
+                labelEl.textContent = targetUrl;
+            }
+            renderQrIntoContainer('inline-menu-qr', targetUrl, 56);
+            renderQrIntoContainer('modal-menu-qr', targetUrl, 176);
+        }
+
+        function openMenuQrModal() {
+            refreshMenuQrCodes();
+            const modal = document.getElementById('menu-qr-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                initIcons();
+            }
+        }
+
+        function closeMenuQrModal() {
+            const modal = document.getElementById('menu-qr-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function printMenuQr() {
+            const targetUrl = getMenuTargetUrl();
+            const qrContainer = document.getElementById('modal-menu-qr');
+            const qrImg = qrContainer ? qrContainer.querySelector('img') : null;
+            const qrCanvas = qrContainer ? qrContainer.querySelector('canvas') : null;
+            const dataUrl = qrImg ? qrImg.src : (qrCanvas ? qrCanvas.toDataURL('image/png') : '');
+
+            if (!dataUrl) {
+                showToast('QR Code en cours de génération...');
+                return;
+            }
+
+            const printWin = window.open('', '_blank', 'width=420,height=520');
+            if (!printWin) return;
+            printWin.document.write(`
+                <html>
+                <head><title>QR Code Menu — Club Lac Ossa</title></head>
+                <body style="font-family:sans-serif;text-align:center;padding:40px;">
+                    <h2>Club Lac Ossa — Menu Restaurant</h2>
+                    <p style="color:#555;">Scannez pour consulter la carte & commander en livraison</p>
+                    <img src="${dataUrl}" alt="QR Code Menu" style="width:220px;height:220px;margin:16px auto;display:block;"/>
+                    <p style="font-size:12px;color:#777;word-break:break-all;">${targetUrl}</p>
+                    <script>window.onload=function(){window.print();}<\/script>
+                </body>
+                </html>
+            `);
+            printWin.document.close();
+        }
+
+        /**
+         * Affiche une notification discrète en bas à droite
+         */
+        function showToast(msg) {
+            const toast = document.getElementById('toast-notification');
+            const toastMsg = document.getElementById('toast-message');
+            if (!toast || !toastMsg) return;
+            toastMsg.textContent = msg;
+            toast.classList.remove('hidden');
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2600);
+        }
+
+        /**
+         * Formate un montant en FCFA ou en EUR selon la devise sélectionnée
+         */
+        function formatPrice(amountXAF) {
+            if (currentCurrency === 'XAF') {
+                return Math.round(amountXAF).toLocaleString('fr-FR') + ' FCFA';
+            } else {
+                const euros = amountXAF / EUR_RATE;
+                return euros.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €';
+            }
+        }
+
+        /**
+         * Change la devise active sur toute la page
+         */
+        function setCurrency(currency) {
+            currentCurrency = currency;
+
+            const btnXaf = document.getElementById('btn-xaf');
+            const btnEur = document.getElementById('btn-eur');
+            const btnXafMob = document.getElementById('btn-xaf-mobile');
+            const btnEurMob = document.getElementById('btn-eur-mobile');
+
+            if (currency === 'XAF') {
+                if (btnXaf) btnXaf.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-terracotta text-forest-dark transition-all';
+                if (btnEur) btnEur.className = 'px-3 py-1 rounded-full text-xs font-semibold text-white hover:text-terracotta transition-all';
+                if (btnXafMob) btnXafMob.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-terracotta text-forest-dark';
+                if (btnEurMob) btnEurMob.className = 'px-3 py-1 rounded-full text-xs font-semibold text-white';
+            } else {
+                if (btnEur) btnEur.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-terracotta text-forest-dark transition-all';
+                if (btnXaf) btnXaf.className = 'px-3 py-1 rounded-full text-xs font-semibold text-white hover:text-terracotta transition-all';
+                if (btnEurMob) btnEurMob.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-terracotta text-forest-dark';
+                if (btnXafMob) btnXafMob.className = 'px-3 py-1 rounded-full text-xs font-semibold text-white';
+            }
+
+            // Mise à jour de tous les éléments avec la classe .price-tag
+            document.querySelectorAll('.price-tag').forEach(el => {
+                const rawXaf = parseFloat(el.getAttribute('data-xaf'));
+                const prefix = el.textContent.trim().startsWith('Dès') ? 'Dès ' : '';
+                el.textContent = prefix + formatPrice(rawXaf);
+            });
+
+            // Mise à jour des options du select de chambres
+            const roomSelect = document.getElementById('room-type');
+            if (roomSelect && roomSelect.options.length >= 3) {
+                roomSelect.options[0].text = `Chambre Standard Jardin — ${formatPrice(35000)} / nuit`;
+                roomSelect.options[1].text = `Bungalow Vue sur le Lac — ${formatPrice(55000)} / nuit`;
+                roomSelect.options[2].text = `Suite Panoramique Prestige — ${formatPrice(85000)} / nuit`;
+            }
+
+            // Mise à jour des zones de livraison
+            const zoneSelect = document.getElementById('delivery-zone');
+            if (zoneSelect && zoneSelect.options.length >= 4) {
+                zoneSelect.options[0].text = `Retrait sur place au restaurant — Gratuit (${formatPrice(0)})`;
+                zoneSelect.options[1].text = `Dizangué Centre — +${formatPrice(1000)}`;
+                zoneSelect.options[2].text = `Périphérie & Villages proches — +${formatPrice(1500)}`;
+                zoneSelect.options[3].text = `Édéa Ville — +${formatPrice(2500)}`;
+            }
+
+            calculateTotal();
+            renderCart();
+        }
+
+        // ==================== GESTION DU RESTAURANT & PANIER LIVRAISON ====================
+
+        function filterMenu(category) {
+            document.querySelectorAll('.menu-card').forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            document.querySelectorAll('.menu-filter').forEach(btn => {
+                btn.className = 'menu-filter px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-stone-600 border border-stone-200 hover:bg-stone-100 transition-all cursor-pointer';
+            });
+            const activeBtn = document.getElementById(`filter-${category}`);
+            if (activeBtn) {
+                activeBtn.className = 'menu-filter px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-forest text-white transition-all cursor-pointer';
+            }
+        }
+
+        function addToCart(id, name, priceXAF) {
+            const existing = deliveryCart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                deliveryCart.push({ id, name, priceXAF, qty: 1 });
+            }
+            renderCart();
+            showToast(`"${name}" ajouté au panier`);
+        }
+
+        function updateCartQty(id, delta) {
+            const index = deliveryCart.findIndex(item => item.id === id);
+            if (index === -1) return;
+
+            deliveryCart[index].qty += delta;
+            if (deliveryCart[index].qty <= 0) {
+                deliveryCart.splice(index, 1);
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const badge = document.getElementById('nav-cart-badge');
+            const countLabel = document.getElementById('cart-count-label');
+            const zoneSelect = document.getElementById('delivery-zone');
+            const deliveryFeeXAF = zoneSelect ? (parseInt(zoneSelect.value, 10) || 0) : 0;
+
+            const addressWrapper = document.getElementById('address-field-wrapper');
+            const addressInput = document.getElementById('delivery-address');
+            if (addressWrapper && addressInput) {
+                if (deliveryFeeXAF === 0) {
+                    addressWrapper.classList.add('hidden');
+                    addressInput.required = false;
+                } else {
+                    addressWrapper.classList.remove('hidden');
+                    addressInput.required = true;
+                }
+            }
+
+            const totalItems = deliveryCart.reduce((sum, item) => sum + item.qty, 0);
+            const subtotalXAF = deliveryCart.reduce((sum, item) => sum + (item.priceXAF * item.qty), 0);
+            const grandTotalXAF = subtotalXAF + deliveryFeeXAF;
+
+            if (countLabel) {
+                countLabel.textContent = `${totalItems} article${totalItems > 1 ? 's' : ''}`;
+            }
+            if (badge) {
+                if (totalItems > 0) {
+                    badge.textContent = totalItems;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+
+            if (container) {
+                if (deliveryCart.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-7 px-4 bg-sand/70 rounded-2xl border border-dashed border-stone-300">
+                            <p class="text-sm font-medium text-stone-600">Votre panier est vide</p>
+                            <p class="text-xs text-stone-400 mt-1">Ajoutez des plats depuis la carte à gauche.</p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = deliveryCart.map(item => `
+                        <div class="flex items-center justify-between gap-3 bg-sand/80 p-3 rounded-2xl border border-stone-200/70">
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs sm:text-sm font-bold text-forest truncate">${item.name}</p>
+                                <p class="text-xs text-stone-500">${formatPrice(item.priceXAF * item.qty)}</p>
+                            </div>
+                            <div class="flex items-center gap-2 bg-white px-2 py-1 rounded-xl border border-stone-200">
+                                <button type="button" onclick="updateCartQty('${item.id}', -1)" class="w-6 h-6 rounded-lg hover:bg-sand flex items-center justify-center text-stone-700 font-bold cursor-pointer">-</button>
+                                <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+                                <button type="button" onclick="updateCartQty('${item.id}', 1)" class="w-6 h-6 rounded-lg hover:bg-sand flex items-center justify-center text-forest font-bold cursor-pointer">+</button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            const subEl = document.getElementById('cart-subtotal');
+            const feeEl = document.getElementById('cart-delivery-fee');
+            const totEl = document.getElementById('cart-total');
+            if (subEl) subEl.textContent = formatPrice(subtotalXAF);
+            if (feeEl) feeEl.textContent = formatPrice(deliveryFeeXAF);
+            if (totEl) totEl.textContent = formatPrice(grandTotalXAF);
+
+            return { subtotalXAF, deliveryFeeXAF, grandTotalXAF };
+        }
+
+        // ==================== GESTION HÉBERGEMENT & RÉSERVATION ====================
+
+        function initDefaultDates() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const dayAfter = new Date(today);
+            dayAfter.setDate(dayAfter.getDate() + 2);
+
+            const formatISO = (d) => d.toISOString().split('T')[0];
+
+            const heroIn = document.getElementById('hero-checkin');
+            const heroOut = document.getElementById('hero-checkout');
+            const formIn = document.getElementById('checkin-date');
+            const formOut = document.getElementById('checkout-date');
+
+            if (heroIn && heroOut) {
+                heroIn.min = formatISO(today);
+                heroIn.value = formatISO(tomorrow);
+                heroOut.min = formatISO(tomorrow);
+                heroOut.value = formatISO(dayAfter);
+            }
+
+            if (formIn && formOut) {
+                formIn.min = formatISO(today);
+                formIn.value = formatISO(tomorrow);
+                formOut.min = formatISO(tomorrow);
+                formOut.value = formatISO(dayAfter);
+            }
+
+            calculateTotal();
+            renderCart();
+        }
+
+        function calculateTotal() {
+            const roomSelect = document.getElementById('room-type');
+            const checkinEl = document.getElementById('checkin-date');
+            const checkoutEl = document.getElementById('checkout-date');
+            if (!roomSelect || !checkinEl || !checkoutEl) return { nights: 1, totalXAF: 55000, roomName: '' };
+
+            const roomKey = roomSelect.value;
+            const room = ROOM_DETAILS[roomKey] || ROOM_DETAILS.bungalow;
+            const checkinVal = checkinEl.value;
+            const checkoutVal = checkoutEl.value;
+
+            let nights = 1;
+            if (checkinVal && checkoutVal) {
+                const d1 = new Date(checkinVal);
+                const d2 = new Date(checkoutVal);
+                const diffTime = d2 - d1;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays > 0) {
+                    nights = diffDays;
+                } else {
+                    const nextDay = new Date(d1);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    checkoutEl.value = nextDay.toISOString().split('T')[0];
+                    nights = 1;
+                }
+            }
+
+            const totalXAF = nights * room.priceXAF;
+            const nightsSummary = document.getElementById('nights-summary');
+            const totalEstimate = document.getElementById('total-estimate');
+            if (nightsSummary) nightsSummary.textContent = `${nights} nuit${nights > 1 ? 's' : ''} • ${room.name}`;
+            if (totalEstimate) totalEstimate.textContent = formatPrice(totalXAF);
+
+            return { nights, totalXAF, roomName: room.name };
+        }
+
+        function selectRoom(roomKey) {
+            const roomSelect = document.getElementById('room-type');
+            const reservationSection = document.getElementById('reservation');
+            if (roomSelect) {
+                roomSelect.value = roomKey;
+                calculateTotal();
+            }
+            if (reservationSection) {
+                reservationSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function bookExcursion(excursionLabel) {
+            const requestsField = document.getElementById('special-requests');
+            const reservationSection = document.getElementById('reservation');
+            if (requestsField) {
+                const currentVal = requestsField.value.trim();
+                const tag = `Excursion souhaitée : ${excursionLabel}`;
+                if (!currentVal.includes(excursionLabel)) {
+                    requestsField.value = currentVal ? `${currentVal} | ${tag}` : tag;
+                }
+            }
+            showToast(`Excursion ajoutée à votre demande`);
+            if (reservationSection) {
+                reservationSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // ==================== MODALE UNIFIÉE MOBILE MONEY & WHATSAPP ====================
+
+        function openConfirmationModal(ctx) {
+            activeModalContext = ctx;
+
+            document.getElementById('modal-type-label').textContent = ctx.typeLabel;
+            document.getElementById('modal-title').textContent = ctx.title;
+            document.getElementById('modal-summary-box').innerHTML = ctx.summaryHtml;
+
+            const momoPanel = document.getElementById('mobile-money-panel');
+            const senderInput = document.getElementById('momo-sender-phone');
+            const txInput = document.getElementById('momo-tx-id');
+
+            senderInput.value = ctx.guestPhone;
+            txInput.value = '';
+
+            if (MERCHANT_ACCOUNTS[ctx.paymentMethod]) {
+                const acc = MERCHANT_ACCOUNTS[ctx.paymentMethod];
+                momoPanel.className = `mb-5 rounded-2xl p-4 sm:p-5 border-2 transition-all ${acc.bgClass}`;
+                document.getElementById('momo-operator-dot').style.backgroundColor = acc.color;
+                document.getElementById('momo-operator-name').textContent = `Paiement via ${ctx.paymentMethod}`;
+                document.getElementById('momo-ussd-code').textContent = acc.ussd;
+                document.getElementById('momo-exact-amount').textContent = `${Math.round(ctx.totalXAF).toLocaleString('fr-FR')} FCFA`;
+                document.getElementById('momo-account-holder').textContent = acc.holder;
+                document.getElementById('momo-merchant-number').textContent = acc.number;
+                momoPanel.classList.remove('hidden');
+            } else {
+                momoPanel.classList.add('hidden');
+            }
+
+            updateWhatsAppLink();
+
+            const modal = document.getElementById('confirmation-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function updateWhatsAppLink() {
+            if (!activeModalContext) return;
+            let fullMessage = activeModalContext.baseWhatsAppMessage;
+
+            if (MERCHANT_ACCOUNTS[activeModalContext.paymentMethod]) {
+                const senderPhone = document.getElementById('momo-sender-phone').value.trim();
+                const txId = document.getElementById('momo-tx-id').value.trim();
+                fullMessage += `\n📲 *Numéro payeur :* ${senderPhone || 'Non précisé'}`;
+                fullMessage += `\n🧾 *ID Transaction SMS :* ${txId || 'En cours de transfert'}`;
+            }
+
+            const encoded = encodeURIComponent(fullMessage);
+            document.getElementById('whatsapp-confirm-btn').href = `https://wa.me/237699000000?text=${encoded}`;
+        }
+
+        function copyMerchantNumber() {
+            const numText = document.getElementById('momo-merchant-number').textContent.replace(/\s+/g, '');
+            const tempInput = document.createElement('input');
+            tempInput.value = numText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            const copyLabel = document.getElementById('copy-momo-text');
+            copyLabel.textContent = 'Copié !';
+            showToast(`Numéro ${numText} copié dans le presse-papiers`);
+            setTimeout(() => {
+                copyLabel.textContent = 'Copier';
+            }, 2000);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('confirmation-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        /**
+         * Initialisation complète des écouteurs après chargement du DOM
+         */
+        function initApp() {
+            initIcons();
+            initDefaultDates();
+            refreshMenuQrCodes();
+
+            // Formulaire de livraison à domicile
+            const deliveryForm = document.getElementById('delivery-form');
+            if (deliveryForm) {
+                deliveryForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    if (deliveryCart.length === 0) {
+                        showToast('Veuillez ajouter au moins un plat à votre panier.');
+                        return;
+                    }
+
+                    const name = document.getElementById('delivery-name').value.trim();
+                    const phone = document.getElementById('delivery-phone').value.trim();
+                    const zoneSelect = document.getElementById('delivery-zone');
+                    const zoneLabel = zoneSelect.options[zoneSelect.selectedIndex].getAttribute('data-label');
+                    const address = document.getElementById('delivery-address').value.trim();
+                    const paymentRadio = document.querySelector('input[name="delivery-payment"]:checked');
+                    const paymentMethod = paymentRadio ? paymentRadio.value : 'Orange Money';
+                    const { subtotalXAF, deliveryFeeXAF, grandTotalXAF } = renderCart();
+
+                    const itemsListHtml = deliveryCart.map(i => `• ${i.qty}x ${i.name} (${formatPrice(i.priceXAF * i.qty)})`).join('<br>');
+                    const itemsListText = deliveryCart.map(i => `- ${i.qty}x ${i.name} (${Math.round(i.priceXAF * i.qty).toLocaleString('fr-FR')} FCFA)`).join('\n');
+
+                    openConfirmationModal({
+                        type: 'delivery',
+                        title: 'Commande Restaurant & Livraison',
+                        typeLabel: 'Livraison à domicile • Club Lac Ossa',
+                        guestName: name,
+                        guestPhone: phone,
+                        paymentMethod: paymentMethod,
+                        totalXAF: grandTotalXAF,
+                        summaryHtml: `
+                            <p><strong>Client :</strong> ${name} (${phone})</p>
+                            <p><strong>Mode :</strong> ${zoneLabel}${deliveryFeeXAF > 0 ? ` — ${address}` : ''}</p>
+                            <div class="pt-1 border-t border-stone-200/80 text-xs">${itemsListHtml}</div>
+                            <p class="pt-1 border-t border-stone-200/80"><strong>Frais de livraison :</strong> ${Math.round(deliveryFeeXAF).toLocaleString('fr-FR')} FCFA</p>
+                            <p class="text-forest font-bold"><strong>Total à payer :</strong> ${Math.round(grandTotalXAF).toLocaleString('fr-FR')} FCFA (${paymentMethod})</p>
+                        `,
+                        baseWhatsAppMessage:
+                            `🍽️ *NOUVELLE COMMANDE LIVRAISON - CLUB LAC OSSA*\n\n` +
+                            `👤 *Client :* ${name}\n` +
+                            `📞 *Tél :* ${phone}\n` +
+                            `🛵 *Zone :* ${zoneLabel}\n` +
+                            (deliveryFeeXAF > 0 ? `📍 *Adresse / Repère :* ${address}\n` : '') +
+                            `\n🛒 *Détail de la commande :*\n${itemsListText}\n\n` +
+                            `📦 *Sous-total :* ${Math.round(subtotalXAF).toLocaleString('fr-FR')} FCFA\n` +
+                            `🚚 *Livraison :* ${Math.round(deliveryFeeXAF).toLocaleString('fr-FR')} FCFA\n` +
+                            `💰 *TOTAL À PAYER :* ${Math.round(grandTotalXAF).toLocaleString('fr-FR')} FCFA\n` +
+                            `💳 *Paiement :* ${paymentMethod}`
+                    });
+                });
+            }
+
+            // Barre de recherche rapide dans le Hero
+            const quickSearchForm = document.getElementById('quick-search-form');
+            if (quickSearchForm) {
+                quickSearchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const checkin = document.getElementById('hero-checkin').value;
+                    const checkout = document.getElementById('hero-checkout').value;
+                    const guests = document.getElementById('hero-guests').value;
+
+                    document.getElementById('checkin-date').value = checkin;
+                    document.getElementById('checkout-date').value = checkout;
+                    
+                    if (guests === '3') {
+                        document.getElementById('adults-count').value = '2';
+                        document.getElementById('children-count').value = '1';
+                    } else if (guests === '4') {
+                        document.getElementById('adults-count').value = '2';
+                        document.getElementById('children-count').value = '2';
+                    } else {
+                        document.getElementById('adults-count').value = guests;
+                        document.getElementById('children-count').value = '0';
+                    }
+
+                    calculateTotal();
+                    const hebergementSection = document.getElementById('hebergement');
+                    if (hebergementSection) hebergementSection.scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+
+            // Formulaire principal de réservation
+            const bookingForm = document.getElementById('booking-form');
+            if (bookingForm) {
+                bookingForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const name = document.getElementById('guest-name').value.trim();
+                    const phone = document.getElementById('guest-phone').value.trim();
+                    const checkin = document.getElementById('checkin-date').value;
+                    const checkout = document.getElementById('checkout-date').value;
+                    const adults = document.getElementById('adults-count').value;
+                    const children = document.getElementById('children-count').value;
+                    const requests = document.getElementById('special-requests').value.trim();
+                    const paymentRadio = document.querySelector('input[name="booking-payment"]:checked');
+                    const paymentMethod = paymentRadio ? paymentRadio.value : 'Orange Money';
+                    const { nights, totalXAF, roomName } = calculateTotal();
+
+                    openConfirmationModal({
+                        type: 'booking',
+                        title: 'Réservation de Séjour',
+                        typeLabel: 'Hébergement • Club Lac Ossa',
+                        guestName: name,
+                        guestPhone: phone,
+                        paymentMethod: paymentMethod,
+                        totalXAF: totalXAF,
+                        summaryHtml: `
+                            <p><strong>Client :</strong> ${name} (${phone})</p>
+                            <p><strong>Hébergement :</strong> ${roomName}</p>
+                            <p><strong>Dates :</strong> Du ${checkin} au ${checkout} (${nights} nuit${nights > 1 ? 's' : ''})</p>
+                            <p><strong>Voyageurs :</strong> ${adults} adulte(s)${children > 0 ? ', ' + children + ' enfant(s)' : ''}</p>
+                            <p class="text-forest font-bold"><strong>Montant total :</strong> ${Math.round(totalXAF).toLocaleString('fr-FR')} FCFA (${paymentMethod})</p>
+                            ${requests ? `<p><strong>Note :</strong> ${requests}</p>` : ''}
+                        `,
+                        baseWhatsAppMessage:
+                            `🏨 *NOUVELLE RÉSERVATION SÉJOUR - CLUB LAC OSSA*\n\n` +
+                            `👤 *Client :* ${name}\n` +
+                            `📞 *Tél :* ${phone}\n` +
+                            `🛏️ *Hébergement :* ${roomName}\n` +
+                            `📅 *Arrivée :* ${checkin}\n` +
+                            `📅 *Départ :* ${checkout} (${nights} nuit(s))\n` +
+                            `👥 *Voyageurs :* ${adults} adulte(s), ${children} enfant(s)\n` +
+                            `💰 *Montant total :* ${Math.round(totalXAF).toLocaleString('fr-FR')} FCFA\n` +
+                            `💳 *Mode de paiement :* ${paymentMethod}` +
+                            (requests ? `\n📝 *Demande spéciale :* ${requests}` : '')
+                    });
+                });
+            }
+
+            // Effet de fond sur la Navbar au défilement
+            const navbar = document.getElementById('navbar');
+            if (navbar) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 50) {
+                        navbar.classList.add('bg-forest-dark/95', 'backdrop-blur-md', 'shadow-lg', 'py-3');
+                        navbar.classList.remove('py-4');
+                    } else {
+                        navbar.classList.remove('bg-forest-dark/95', 'backdrop-blur-md', 'shadow-lg', 'py-3');
+                        navbar.classList.add('py-4');
+                    }
+                });
+            }
+
+            // Menu Mobile
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+                document.querySelectorAll('.mobile-link').forEach(link => {
+                    link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+                });
+            }
+
+            // Animation douce des sections au défilement
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            } else {
+                document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+    </script>
+</body>
+</html>
